@@ -8,6 +8,7 @@ Aqui está uma versão aprimorada e mais técnica do seu `README.md` para o proj
 
 Para instalar e executar com sucesso a aplicação Livraria Spassu, certifique-se de que seu ambiente atenda aos seguintes requisitos:
 
+-   **APIs livraria Spassu**: [Configuração](https://github.com/deniscury/api.livrariaspassu.com.br)
 -   **PHP**: Versão 8.3.12 ou superior
 -   **Composer**: Gerenciador de dependências para PHP
 -   **Configuração do php.ini**: Certifique-se de que as seguintes extensões estejam habilitadas:
