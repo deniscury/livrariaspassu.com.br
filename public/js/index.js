@@ -466,6 +466,16 @@ function salvarLivro() {
         return;
     }
 
+    if (edicao == "") {
+        alert("Por favor preencha a edição do livro");
+        return;
+    }
+
+    if (ano_publicacao == "") {
+        alert("Por favor preencha o ano de publicação do livro");
+        return;
+    }
+
     $.ajax({
         url: urlApi + "/livro" + (id == "" ? "" : "/" + id),
         dataType: "json",
