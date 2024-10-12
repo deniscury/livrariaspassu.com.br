@@ -18,6 +18,15 @@ $(document).ready(function () {
         zerarDataTable("tbAssuntosVinculados", 3);
         zerarDataTable("tbAssuntosNaoVinculados", 3);
     });
+
+    $("#manutencaoLivroAutor").on("hidden.bs.modal", function () {
+        $("#livroAutorVinculo").html(
+            "<img class='img-responsive img-rounded' style='max-height: 30px; max-width: 30px;' src='img/ajax_loader.gif'>"
+        );
+
+        zerarDataTable("tbAutoresVinculados", 3);
+        zerarDataTable("tbAutoresNaoVinculados", 3);
+    });
 });
 
 function quantidadeLivros() {
