@@ -188,6 +188,7 @@
                                     <th>Editora</th>
                                     <th>Edição</th>
                                     <th>Ano Publicação</th>
+                                    <th>Valor</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
@@ -198,12 +199,13 @@
                                     <th>Editora</th>
                                     <th>Edição</th>
                                     <th>Ano Publicação</th>
+                                    <th>Valor</th>
                                     <th>Ações</th>
                                 </tr>
                             </tfoot>
                             <tbody>
                                 <tr>
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="7" class="text-center">
                                         @component('components/ajaxLoader')
                                         @endcomponent
                                     </td>

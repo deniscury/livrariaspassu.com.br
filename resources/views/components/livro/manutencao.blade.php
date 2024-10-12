@@ -23,6 +23,10 @@
 					<label>Ano de Publicação</label>
 					<input type="text" class="form-control" id="anoPublicacaoLivro" required>
 				</div>					
+				<div class="form-group">
+					<label>Valor</label>
+					<input type="text" class="form-control" id="valorLivro" required>
+				</div>						
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-default" data-dismiss="modal">Cancelar</button>

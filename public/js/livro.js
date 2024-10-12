@@ -2,12 +2,15 @@ $(document).ready(function () {
     quantidadeLivros();
     getLivros();
 
+    $("#valorLivro").maskMoney({thousands:'.', decimal:',', allowZero:true, prefix: 'R$ '});
+
     $("#manutencaoLivro").on("hidden.bs.modal", function () {
         $("#idLivro").val("");
         $("#tituloLivro").val("");
         $("#editoraLivro").val("");
         $("#edicaoLivro").val("");
         $("#anoPublicacaoLivro").val("");
+        $("#valorLivro").val("");
     });
 
     $("#manutencaoLivroAssunto").on("hidden.bs.modal", function () {
@@ -72,6 +75,9 @@ function getLivros() {
                         "<td class='text-center'>" +
                             valor.ano_publicacao +
                         "</td>" +
+                        "<td class='text-right'>" +
+                            "R$ "+valor.valor +
+                        "</td>" +
                         "<td class='text-center'>" +
                             "<button class='btn btn-sm btn-success' title='Editar' onclick='editarLivro(" + valor.id +");'><i class='fas fa-edit'></i></button> " +
                             "<button class='btn btn-sm btn-danger' title='Excluir' onclick='excluirLivro(" + valor.id + ");'><i class='fas fa-trash'></i></button> " +
@@ -83,8 +89,7 @@ function getLivros() {
                 $("#tbLivros tbody").append(tr);
             });
 
-            dataTableOptions.columns = [{ type: "num" }, null, null, null, null, null];
-
+            dataTableOptions.columns = [{ type: "num" }, null, null, null, null, null, null];
             $("#tbLivros").dataTable(dataTableOptions);
         },
     });
@@ -130,6 +135,7 @@ function carregarDadosManutencaoLivro(dados) {
     $("#editoraLivro").val(dados.editora);
     $("#edicaoLivro").val(dados.edicao);
     $("#anoPublicacaoLivro").val(dados.ano_publicacao);
+    $("#valorLivro").val(dados.valor);
 }
 
 function carregarDadosManutencaoLivroAssunto(dados) {
@@ -141,7 +147,7 @@ function carregarDadosManutencaoLivroAssunto(dados) {
 function carregarlivroAssuntoVinculo(dados){
     $("#idLivroAssuntoVinculo").val(dados.id);
 
-    livroAssuntoVinculo = "<strong>" + dados.id + " - " + dados.titulo + "</strong>" + "<br>" +
+    livroAssuntoVinculo = "<strong>" + dados.id + " - " + dados.titulo + " - R$ " + dados.valor + "</strong>" + "<br>" +
         "<small>" + "Editora: " + dados.editora + " - Edição: " + dados.edicao + " - Ano de publicação: " + dados.ano_publicacao + "</small>";
 
     $("#livroAssuntoVinculo").html(livroAssuntoVinculo);
@@ -193,7 +199,7 @@ function carregarDadosManutencaoLivroAutor(dados) {
 function carregarlivroAutorVinculo(dados){
     $("#idLivroAutorVinculo").val(dados.id);
 
-    livroAutorVinculo = "<strong>" + dados.id + " - " + dados.titulo + "</strong>" + "<br>" +
+    livroAutorVinculo = "<strong>" + dados.id + " - " + dados.titulo + " - R$ " + dados.valor + "</strong>" + "<br>" +
         "<small>" + "Editora: " + dados.editora + " - Edição: " + dados.edicao + " - Ano de publicação: " + dados.ano_publicacao + "</small>";
 
     $("#livroAutorVinculo").html(livroAutorVinculo);
@@ -242,6 +248,7 @@ function salvarLivro() {
     editora = $("#editoraLivro").val().trim();
     edicao = $("#edicaoLivro").val();
     ano_publicacao = $("#anoPublicacaoLivro").val();
+    valor = $("#valorLivro").val().replace("R$ ", "").replaceAll(".", "").replaceAll(",", ".");
 
     if (titulo == "") {
         alert("Por favor preencha o título do livro");
@@ -263,6 +270,11 @@ function salvarLivro() {
         return;
     }
 
+    if (valor == "" || valor == "0.00") {
+        alert("Por favor preencha um valor maior do que zero para o livro");
+        return;
+    }
+
     $.ajax({
         url: urlApi + "/livro" + (id == "" ? "" : "/" + id),
         dataType: "json",
@@ -273,6 +285,7 @@ function salvarLivro() {
             editora: editora,
             edicao: edicao,
             ano_publicacao: ano_publicacao,
+            valor: valor,
         },
         success: function (retorno) {
             mensagem = retorno.mensagem;
@@ -294,7 +307,7 @@ function salvarLivro() {
             alert(mensagem);
         },
         complete: function () {
-            zerarDataTable("tbLivros", 6);
+            zerarDataTable("tbLivros", 7);
 
             quantidadeLivros();
             getLivros();
@@ -320,7 +333,7 @@ function excluirLivro(id) {
                     alert(mensagem);
                 }
 
-                zerarDataTable("tbLivros", 6);
+                zerarDataTable("tbLivros", 7);
 
                 quantidadeLivros();
                 getLivros();
