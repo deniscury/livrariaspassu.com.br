@@ -23,19 +23,19 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link" href="/assuntos">
+        <a class="nav-link" href="javascript:novoAssunto();">
             <i class="fas fa-fw fa-cog"></i>
             <span>Assuntos</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/autores">
+        <a class="nav-link" href="javascript:novoAutor();">
             <i class="fas fa-fw fa-cog"></i>
             <span>Autores</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="/livros">
+        <a class="nav-link" href="javascript:novoLivro();">
             <i class="fas fa-fw fa-cog"></i>
             <span>Livros</span>
         </a>

@@ -1,0 +1,461 @@
+$(document).ready(function () {
+    quantidadeLivros();
+    getLivros();
+
+    $("#manutencaoLivro").on("hidden.bs.modal", function () {
+        $("#idLivro").val("");
+        $("#tituloLivro").val("");
+        $("#editoraLivro").val("");
+        $("#edicaoLivro").val("");
+        $("#anoPublicacaoLivro").val("");
+    });
+
+    $("#manutencaoLivroAssunto").on("hidden.bs.modal", function () {
+        $("#livroAssuntoVinculo").html(
+            "<img class='img-responsive img-rounded' style='max-height: 30px; max-width: 30px;' src='img/ajax_loader.gif'>"
+        );
+
+        zerarDataTable("tbAssuntosVinculados", 3);
+        zerarDataTable("tbAssuntosNaoVinculados", 3);
+    });
+});
+
+function quantidadeLivros() {
+    $.ajax({
+        url: urlApi + "/livro/quantidade-registros",
+        dataType: "json",
+        type: "GET",
+        crossDomain: true,
+        success: function (retorno) {
+            dados = retorno.dados;
+            qtd = dados.registros;
+
+            $("#dvQtdLivros").html(qtd);
+        },
+    });
+}
+
+function getLivros() {
+    $.ajax({
+        url: urlApi + "/livro",
+        dataType: "json",
+        type: "GET",
+        crossDomain: true,
+        success: function (retorno) {
+            dados = retorno.dados;
+
+            $("#tbLivros tbody").empty();
+            $.each(dados[0], function (chave, valor) {
+                tr = 
+                    "<tr>" +
+                        "<td class='text-center'>" +
+                            valor.id +
+                        "</td>" +
+                        "<td>" +
+                            valor.titulo +
+                        "</td>" +
+                        "<td>" +
+                            valor.editora +
+                        "</td>" +
+                        "<td class='text-center'>" +
+                            valor.edicao +
+                        "</td>" +
+                        "<td class='text-center'>" +
+                            valor.ano_publicacao +
+                        "</td>" +
+                        "<td class='text-center'>" +
+                            "<button class='btn btn-sm btn-success' title='Editar' onclick='editarLivro(" + valor.id +");'><i class='fas fa-edit'></i></button> " +
+                            "<button class='btn btn-sm btn-danger' title='Excluir' onclick='excluirLivro(" + valor.id + ");'><i class='fas fa-trash'></i></button> " +
+                            "<button class='btn btn-sm btn-warning' title='Vincular Assunto' onclick='vincularAssunto(" + valor.id + ");'><i class='fas fa-file'></i></button> " +
+                            "<button class='btn btn-sm btn-primary' title='Vincular Autor' onclick='vincularAutor(" + valor.id + ");'><i class='fas fa-user'></i></button> " +
+                        "</td>" +
+                    "</tr>";
+
+                $("#tbLivros tbody").append(tr);
+            });
+
+            dataTableOptions.columns = [{ type: "num" }, null, null, null, null, null];
+
+            $("#tbLivros").dataTable(dataTableOptions);
+        },
+    });
+}
+
+function novoLivro() {
+    $("#manutencaoLivro").modal();
+}
+
+function editarLivro(id) {
+    $("#manutencaoLivro").modal();
+
+    getLivro(id, 1);
+}
+
+function getLivro(id, tipo) {
+    $.ajax({
+        url: urlApi + "/livro/" + id,
+        dataType: "json",
+        type: "GET",
+        crossDomain: true,
+        success: function (retorno) {
+            dados = retorno.dados;
+
+            if (tipo == 1) {
+                carregarDadosManutencaoLivro(dados);
+            }
+
+            if (tipo == 2) {
+                carregarDadosManutencaoLivroAssunto(dados);
+            }
+
+            if (tipo == 3) {
+                carregarDadosManutencaoLivroAutor(dados);
+            }
+        },
+    });
+}
+
+function carregarDadosManutencaoLivro(dados) {
+    $("#idLivro").val(dados.id);
+    $("#tituloLivro").val(dados.titulo);
+    $("#editoraLivro").val(dados.editora);
+    $("#edicaoLivro").val(dados.edicao);
+    $("#anoPublicacaoLivro").val(dados.ano_publicacao);
+}
+
+function carregarDadosManutencaoLivroAssunto(dados) {
+    carregarlivroAssuntoVinculo(dados);
+    getAssuntos(2);
+    getAssuntosVinculados(dados.id);
+}
+
+function carregarlivroAssuntoVinculo(dados){
+    $("#idLivroAssuntoVinculo").val(dados.id);
+
+    livroAssuntoVinculo = "<strong>" + dados.id + " - " + dados.titulo + "</strong>" + "<br>" +
+        "<small>" + "Editora: " + dados.editora + " - Edição: " + dados.edicao + " - Ano de publicação: " + dados.ano_publicacao + "</small>";
+
+    $("#livroAssuntoVinculo").html(livroAssuntoVinculo);
+}
+
+function getAssuntosVinculados(id) {
+    $.ajax({
+        url: urlApi + "/livro-assunto/livro/" + id + "/assunto/0",
+        dataType: "json",
+        type: "GET",
+        crossDomain: true,
+        success: function (retorno) {
+            dados = retorno.dados[0];
+
+            $("#tbAssuntosVinculados tbody").empty();
+            $.each(dados, function (chave, valor) {
+                tr =
+                    "<tr>" +
+                        "<td class='text-center' width='5%'>" +
+                            "<button class='btn btn-sm btn-danger' title='Remover' onclick='desvincularAssuntoLivro(" + valor.assunto.id + ");'><i class='fas fa-minus'></i></button> " +
+                        "</td>" +
+                        "<td class='text-center'>" +
+                            valor.assunto.id +
+                        "</td>" +
+                        "<td>" +
+                            valor.assunto.descricao +
+                        "</td>"+
+                    "</tr>";
+
+                $("#tbAssuntosNaoVinculados").DataTable().row( function ( idx, data, node ) {
+                    return data[0] == valor.assunto.id;
+                }).remove().draw();
+
+                $("#tbAssuntosVinculados").append(tr);
+            });
+            
+            dataTableOptions.columns = [{ type: "num" }, null, null];
+            $("#tbAssuntosVinculados").dataTable(dataTableOptions);
+        },
+    });
+}
+
+function carregarDadosManutencaoLivroAutor(dados) {
+    carregarlivroAutorVinculo(dados);
+    getAutores(2);
+    getAutoresVinculados(dados.id);
+}
+
+function carregarlivroAutorVinculo(dados){
+    $("#idLivroAutorVinculo").val(dados.id);
+
+    livroAutorVinculo = "<strong>" + dados.id + " - " + dados.titulo + "</strong>" + "<br>" +
+        "<small>" + "Editora: " + dados.editora + " - Edição: " + dados.edicao + " - Ano de publicação: " + dados.ano_publicacao + "</small>";
+
+    $("#livroAutorVinculo").html(livroAutorVinculo);
+}
+
+function getAutoresVinculados(id) {
+    $.ajax({
+        url: urlApi + "/livro-autor/livro/" + id + "/autor/0",
+        dataType: "json",
+        type: "GET",
+        crossDomain: true,
+        success: function (retorno) {
+            dados = retorno.dados[0];
+
+            $("#tbAutoresVinculados tbody").empty();
+            $.each(dados, function (chave, valor) {
+                tr =
+                    "<tr>" +
+                        "<td class='text-center' width='5%'>" +
+                            "<button class='btn btn-sm btn-danger' title='Remover' onclick='desvincularAutorLivro(" + valor.autor.id + ");'><i class='fas fa-minus'></i></button> " +
+                        "</td>" +
+                        "<td class='text-center'>" +
+                            valor.autor.id +
+                        "</td>" +
+                        "<td>" +
+                            valor.autor.nome +
+                        "</td>"+
+                    "</tr>";
+
+                $("#tbAutoresNaoVinculados").DataTable().row( function ( idx, data, node ) {
+                    return data[0] == valor.autor.id;
+                }).remove().draw();
+
+                $("#tbAutoresVinculados").append(tr);
+            });
+            
+            dataTableOptions.columns = [{ type: "num" }, null, null];
+            $("#tbAutoresVinculados").dataTable(dataTableOptions);
+        },
+    });
+}
+
+function salvarLivro() {
+    id = $("#idLivro").val();
+    titulo = $("#tituloLivro").val().trim();
+    editora = $("#editoraLivro").val().trim();
+    edicao = $("#edicaoLivro").val();
+    ano_publicacao = $("#anoPublicacaoLivro").val();
+
+    if (titulo == "") {
+        alert("Por favor preencha o título do livro");
+        return;
+    }
+
+    if (editora == "") {
+        alert("Por favor preencha a editora do livro");
+        return;
+    }
+
+    if (edicao == "") {
+        alert("Por favor preencha a edição do livro");
+        return;
+    }
+
+    if (ano_publicacao == "") {
+        alert("Por favor preencha o ano de publicação do livro");
+        return;
+    }
+
+    $.ajax({
+        url: urlApi + "/livro" + (id == "" ? "" : "/" + id),
+        dataType: "json",
+        type: id == "" ? "POST" : "PATCH",
+        crossDomain: true,
+        data: {
+            titulo: titulo,
+            editora: editora,
+            edicao: edicao,
+            ano_publicacao: ano_publicacao,
+        },
+        success: function (retorno) {
+            mensagem = retorno.mensagem;
+
+            if (mensagem != undefined) {
+                alert(mensagem);
+            }
+        },
+        error: function (retorno) {
+            retorno = JSON.parse(retorno.responseText);
+
+            mensagem = retorno.mensagem;
+            erros = retorno.erros;
+
+            $.each(erros, function (index, valor) {
+                mensagem += "\n" + valor;
+            });
+
+            alert(mensagem);
+        },
+        complete: function () {
+            zerarDataTable("tbLivros", 6);
+
+            quantidadeLivros();
+            getLivros();
+            $("#manutencaoLivro").modal("hide");
+        },
+    });
+}
+
+function excluirLivro(id) {
+    confirmar = confirm(
+        "Tem certeza de que deseja excluir esse livro, todos os vínculos dele também serão excluídos?"
+    );
+
+    if (confirmar) {
+        $.ajax({
+            url: urlApi + "/livro/" + id,
+            dataType: "json",
+            type: "DELETE",
+            crossDomain: true,
+            success: function (retorno) {
+                mensagem = retorno.mensagem;
+                if (mensagem != undefined) {
+                    alert(mensagem);
+                }
+
+                zerarDataTable("tbLivros", 6);
+
+                quantidadeLivros();
+                getLivros();
+            },
+        });
+    }
+}
+
+function vincularAssunto(id) {
+    $("#manutencaoLivroAssunto").modal();
+
+    getLivro(id, 2);
+}
+
+function vincularAssuntoLivro(assunto_id){
+    zerarDataTable("tbAssuntosVinculados", 3);
+    zerarDataTable("tbAssuntosNaoVinculados", 3);
+    livro_id = $("#idLivroAssuntoVinculo").val();
+
+    $.ajax({
+        url: urlApi + "/livro-assunto",
+        dataType: "json",
+        type: "POST",
+        crossDomain: true,
+        data: {
+            livro_id: livro_id,
+            assunto_id: assunto_id
+        },
+        success: function (retorno) {
+            mensagem = retorno.mensagem;
+
+            if (mensagem != undefined) {
+                alert(mensagem);
+            }
+        },
+        error: function (retorno) {
+            retorno = JSON.parse(retorno.responseText);
+
+            mensagem = retorno.mensagem;
+            erros = retorno.erros;
+
+            $.each(erros, function (index, valor) {
+                mensagem += "\n" + valor;
+            });
+
+            alert(mensagem);
+        },
+        complete: function () {
+            getAssuntos(2);
+            getAssuntosVinculados(livro_id);
+        },
+    });
+}
+
+function desvincularAssuntoLivro(assunto_id){
+    zerarDataTable("tbAssuntosVinculados", 3);
+    zerarDataTable("tbAssuntosNaoVinculados", 3);
+    livro_id = $("#idLivroAssuntoVinculo").val();
+
+    $.ajax({
+        url: urlApi + "/livro-assunto/livro/" + livro_id + "/assunto/" + assunto_id,
+        dataType: "json",
+        type: "DELETE",
+        crossDomain: true,
+        success: function (retorno) {
+            mensagem = retorno.mensagem;
+
+            if (mensagem != undefined) {
+                alert(mensagem);
+            }
+        },
+        complete: function () {
+            getAssuntos(2);
+            getAssuntosVinculados(livro_id);
+        },
+    });
+}
+
+function vincularAutor(id) {
+    $("#manutencaoLivroAutor").modal();
+
+    getLivro(id, 3);
+}
+
+function vincularAutorLivro(autor_id){
+    zerarDataTable("tbAutoresVinculados", 3);
+    zerarDataTable("tbAutoresNaoVinculados", 3);
+    livro_id = $("#idLivroAutorVinculo").val();
+
+    $.ajax({
+        url: urlApi + "/livro-autor",
+        dataType: "json",
+        type: "POST",
+        crossDomain: true,
+        data: {
+            livro_id: livro_id,
+            autor_id: autor_id
+        },
+        success: function (retorno) {
+            mensagem = retorno.mensagem;
+
+            if (mensagem != undefined) {
+                alert(mensagem);
+            }
+        },
+        error: function (retorno) {
+            retorno = JSON.parse(retorno.responseText);
+
+            mensagem = retorno.mensagem;
+            erros = retorno.erros;
+
+            $.each(erros, function (index, valor) {
+                mensagem += "\n" + valor;
+            });
+
+            alert(mensagem);
+        },
+        complete: function () {
+            getAutores(2);
+            getAutoresVinculados(livro_id);
+        },
+    });
+}
+
+function desvincularAutorLivro(autor_id){
+    zerarDataTable("tbAutoresVinculados", 3);
+    zerarDataTable("tbAutoresNaoVinculados", 3);
+    livro_id = $("#idLivroAutorVinculo").val();
+
+    $.ajax({
+        url: urlApi + "/livro-autor/livro/" + livro_id + "/autor/" + autor_id,
+        dataType: "json",
+        type: "DELETE",
+        crossDomain: true,
+        success: function (retorno) {
+            mensagem = retorno.mensagem;
+
+            if (mensagem != undefined) {
+                alert(mensagem);
+            }
+        },
+        complete: function () {
+            getAutores(2);
+            getAutoresVinculados(livro_id);
+        },
+    });
+}

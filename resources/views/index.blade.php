@@ -35,7 +35,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Autores
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="dvQtdAutores">
@@ -56,7 +56,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Livros
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800" id="dvQtdLivros">
@@ -172,7 +172,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Livros</h6>
                         </div>
                         <div class="col-md-6 text-right">
-                            <a href="#manutencaoLivro" class="btn btn-sm btn-success" data-toggle="modal">
+                            <a class="btn btn-sm btn-success" data-toggle="modal" onclick="novoLivro();">
                                 <i class="fa fa-plus"></i>&nbsp;Novo livro
                             </a>
                         </div>
@@ -218,7 +218,7 @@
 
 @component('components/rodape',
     array(
-        'scripts' => array('index')
+        'scripts' => array('index', 'assunto', 'autor', 'livro')
     )
 )
 @endcomponent

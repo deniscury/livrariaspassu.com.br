@@ -19,6 +19,12 @@
     @component('components/livro/manutencao')          
     @endcomponent   
 
+    @component('components/livro-assunto/vinculo')          
+    @endcomponent   
+
+    @component('components/livro-autor/vinculo')          
+    @endcomponent   
+
 
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
