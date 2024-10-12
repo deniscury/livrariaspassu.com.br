@@ -14,6 +14,7 @@ function quantidadeAssuntos() {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
             qtd = dados.registros;
@@ -29,6 +30,7 @@ function getAssuntos(tipo) {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
             nomeTabela = (tipo == 1 ? "tbAssuntos" : "tbAssuntosNaoVinculados");
@@ -86,6 +88,7 @@ function getAssunto(id) {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
 
@@ -109,6 +112,7 @@ function salvarAssunto() {
         dataType: "json",
         type: id == "" ? "POST" : "PATCH",
         crossDomain: true,
+        async: true,
         data: {
             descricao: descricao,
         },
@@ -152,6 +156,7 @@ function excluirAssunto(id) {
             dataType: "json",
             type: "DELETE",
             crossDomain: true,
+            async: true,
             success: function (retorno) {
                 mensagem = retorno.mensagem;
                 if (mensagem != undefined) {

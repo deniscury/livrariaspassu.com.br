@@ -38,6 +38,7 @@ function quantidadeLivros() {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
             qtd = dados.registros;
@@ -53,6 +54,7 @@ function getLivros() {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
 
@@ -111,6 +113,7 @@ function getLivro(id, tipo) {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
 
@@ -159,6 +162,7 @@ function getAssuntosVinculados(id) {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados[0];
 
@@ -211,6 +215,7 @@ function getAutoresVinculados(id) {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados[0];
 
@@ -280,6 +285,7 @@ function salvarLivro() {
         dataType: "json",
         type: id == "" ? "POST" : "PATCH",
         crossDomain: true,
+        async: true,
         data: {
             titulo: titulo,
             editora: editora,
@@ -327,6 +333,7 @@ function excluirLivro(id) {
             dataType: "json",
             type: "DELETE",
             crossDomain: true,
+            async: true,
             success: function (retorno) {
                 mensagem = retorno.mensagem;
                 if (mensagem != undefined) {
@@ -358,6 +365,7 @@ function vincularAssuntoLivro(assunto_id){
         dataType: "json",
         type: "POST",
         crossDomain: true,
+        async: true,
         data: {
             livro_id: livro_id,
             assunto_id: assunto_id
@@ -398,6 +406,7 @@ function desvincularAssuntoLivro(assunto_id){
         dataType: "json",
         type: "DELETE",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             mensagem = retorno.mensagem;
 
@@ -428,6 +437,7 @@ function vincularAutorLivro(autor_id){
         dataType: "json",
         type: "POST",
         crossDomain: true,
+        async: true,
         data: {
             livro_id: livro_id,
             autor_id: autor_id
@@ -468,6 +478,7 @@ function desvincularAutorLivro(autor_id){
         dataType: "json",
         type: "DELETE",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             mensagem = retorno.mensagem;
 

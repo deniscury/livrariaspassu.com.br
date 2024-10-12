@@ -14,6 +14,7 @@ function quantidadeAutores() {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
             qtd = dados.registros;
@@ -29,6 +30,7 @@ function getAutores(tipo) {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
             nomeTabela = (tipo == 1 ? "tbAutores" : "tbAutoresNaoVinculados");
@@ -86,6 +88,7 @@ function getAutor(id) {
         dataType: "json",
         type: "GET",
         crossDomain: true,
+        async: true,
         success: function (retorno) {
             dados = retorno.dados;
 
@@ -109,6 +112,7 @@ function salvarAutor() {
         dataType: "json",
         type: id == "" ? "POST" : "PATCH",
         crossDomain: true,
+        async: true,
         data: {
             nome: nome,
         },
@@ -152,6 +156,7 @@ function excluirAutor(id) {
             dataType: "json",
             type: "DELETE",
             crossDomain: true,
+            async: true,
             success: function (retorno) {
                 mensagem = retorno.mensagem;
                 if (mensagem != undefined) {
