@@ -56,42 +56,46 @@ function getLivros() {
         crossDomain: true,
         async: true,
         success: function (retorno) {
-            dados = retorno.dados;
+            livros = retorno.dados[0];
+            dadosDataTable = [];
 
             $("#tbLivros tbody").empty();
-            $.each(dados[0], function (chave, valor) {
-                tr = 
-                    "<tr>" +
-                        "<td class='text-center'>" +
-                            valor.id +
-                        "</td>" +
-                        "<td>" +
-                            valor.titulo +
-                        "</td>" +
-                        "<td>" +
-                            valor.editora +
-                        "</td>" +
-                        "<td class='text-center'>" +
-                            valor.edicao +
-                        "</td>" +
-                        "<td class='text-center'>" +
-                            valor.ano_publicacao +
-                        "</td>" +
-                        "<td class='text-right'>" +
-                            "R$ "+valor.valor +
-                        "</td>" +
-                        "<td class='text-center'>" +
-                            "<button class='btn btn-sm btn-success' title='Editar' onclick='editarLivro(" + valor.id +");'><i class='fas fa-edit'></i></button> " +
-                            "<button class='btn btn-sm btn-danger' title='Excluir' onclick='excluirLivro(" + valor.id + ");'><i class='fas fa-trash'></i></button> " +
-                            "<button class='btn btn-sm btn-warning' title='Vincular Assunto' onclick='vincularAssunto(" + valor.id + ");'><i class='fas fa-file'></i></button> " +
-                            "<button class='btn btn-sm btn-primary' title='Vincular Autor' onclick='vincularAutor(" + valor.id + ");'><i class='fas fa-user'></i></button> " +
-                        "</td>" +
-                    "</tr>";
+            $.each(livros, function (chave, livro) {
+                buttons = "<button class='btn btn-sm btn-success' title='Editar' onclick='editarLivro(" + livro.id +");'><i class='fas fa-edit'></i></button> " +
+                            "<button class='btn btn-sm btn-danger' title='Excluir' onclick='excluirLivro(" + livro.id + ");'><i class='fas fa-trash'></i></button> " +
+                            "<button class='btn btn-sm btn-warning' title='Vincular Assunto' onclick='vincularAssunto(" + livro.id + ");'><i class='fas fa-file'></i></button> " +
+                            "<button class='btn btn-sm btn-primary' title='Vincular Autor' onclick='vincularAutor(" + livro.id + ");'><i class='fas fa-user'></i></button> ";
+                
 
-                $("#tbLivros tbody").append(tr);
+                dadosDataTable.push({
+                    id: livro.id,
+                    titulo: livro.titulo,
+                    editora: livro.editora,
+                    edicao: livro.edicao,
+                    ano_publicacao: livro.ano_publicacao,
+                    valor: "R$ "+livro.valor,
+                    acoes: buttons
+                });
             });
 
-            dataTableOptions.columns = [{ type: "num" }, null, null, null, null, null, null];
+            dataTableOptions.data = dadosDataTable;
+            dataTableOptions.columns = [
+                {data: "id", type: "num"}, 
+                {data: "titulo"}, 
+                {data: "editora"}, 
+                {data: "edicao"},
+                {data: "ano_publicacao"}, 
+                {data: "valor"}, 
+                {data: "acoes"}
+            ];
+            dataTableOptions.columnDefs = [
+                {targets: 0, className: 'text-center'},
+                {targets: 3, className: 'text-center'},
+                {targets: 4, className: 'text-center'},
+                {targets: 5, className: 'text-right'},
+                {targets: 6, className: 'text-center'}
+            ];
+
             $("#tbLivros").dataTable(dataTableOptions);
         },
     });

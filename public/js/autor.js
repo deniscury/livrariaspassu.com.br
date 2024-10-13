@@ -32,41 +32,39 @@ function getAutores(tipo) {
         crossDomain: true,
         async: true,
         success: function (retorno) {
-            dados = retorno.dados;
+            autores = retorno.dados[0];
             nomeTabela = (tipo == 1 ? "tbAutores" : "tbAutoresNaoVinculados");
+            dadosDataTable = [];
 
             $("#" + nomeTabela + " tbody").empty();
-            $.each(dados[0], function (chave, valor) {
-                tr =
-                    "<tr>" +
-                        "<td class='text-center'>" +
-                            valor.id +
-                        "</td>" +
-                        "<td>" +
-                            valor.nome +
-                        "</td>";
-                
+            $.each(autores, function (chave, autor) {
                 if(tipo == 1){
-                    tr +=
-                        "<td class='text-center'>" +
-                            "<button class='btn btn-sm btn-success' title='Editar' onclick='editarAutor(" + valor.id + ");'><i class='fas fa-edit'></i></button> " +
-                            "<button class='btn btn-sm btn-danger' title='Excluir' onclick='excluirAutor(" + valor.id + ");'><i class='fas fa-trash'></i></button> " +
-                        "</td>" +
-                    "</tr>";
+                    buttons = "<button class='btn btn-sm btn-success' title='Editar' onclick='editarAutor(" + autor.id + ");'><i class='fas fa-edit'></i></button> " +
+                            "<button class='btn btn-sm btn-danger' title='Excluir' onclick='excluirAutor(" + autor.id + ");'><i class='fas fa-trash'></i></button> ";
                 }
                 
                 if(tipo == 2){
-                    tr +=
-                        "<td class='text-center' width='5%'>" +
-                            "<button class='btn btn-sm btn-success' title='Adicionar' onclick='vincularAutorLivro(" + valor.id + ");'><i class='fas fa-plus'></i></button> " +
-                        "</td>" +
-                    "</tr>";
+                    buttons = "<button class='btn btn-sm btn-success' title='Adicionar' onclick='vincularAutorLivro(" + autor.id + ");'><i class='fas fa-plus'></i></button> ";
                 }
 
-                $("#" + nomeTabela).append(tr);
+                dadosDataTable.push({
+                    id: autor.id,
+                    nome: autor.nome,
+                    acoes: buttons
+                });
             });
 
-            dataTableOptions.columns = [{ type: "num" }, null, null];
+            dataTableOptions.data = dadosDataTable;
+            dataTableOptions.columns = [
+                {data: "id", type: "num"}, 
+                {data: "nome"}, 
+                {data: "acoes"}
+            ];
+            dataTableOptions.columnDefs = [
+                {targets: 0, className: 'text-center'},
+                {targets: 2, className: 'text-center'}
+            ];
+            
             $("#" + nomeTabela).dataTable(dataTableOptions);
         },
     });

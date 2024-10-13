@@ -1,1 +1,1 @@
-<img class="img-responsive img-rounded" style="max-height: 30px; max-width: 30px;" src="img/ajax_loader.gif">
+<img class="img-responsive img-rounded" style="max-height: 30px; max-width: 30px;" src="/img/ajax_loader.gif">

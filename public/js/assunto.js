@@ -32,41 +32,39 @@ function getAssuntos(tipo) {
         crossDomain: true,
         async: true,
         success: function (retorno) {
-            dados = retorno.dados;
+            assuntos = retorno.dados[0];
             nomeTabela = (tipo == 1 ? "tbAssuntos" : "tbAssuntosNaoVinculados");
+            dadosDataTable = [];
 
             $("#" + nomeTabela + " tbody").empty();
-            $.each(dados[0], function (chave, valor) {
-                tr =
-                    "<tr>" +
-                        "<td class='text-center'>" +
-                            valor.id +
-                        "</td>" +
-                        "<td>" +
-                            valor.descricao +
-                        "</td>";
-                
+            $.each(assuntos, function (chave, assunto) {                
                 if(tipo == 1){
-                    tr +=
-                        "<td class='text-center'>" +
-                            "<button class='btn btn-sm btn-success' title='Editar' onclick='editarAssunto(" + valor.id + ");'><i class='fas fa-edit'></i></button> " +
-                            "<button class='btn btn-sm btn-danger' title='Excluir' onclick='excluirAssunto(" + valor.id + ");'><i class='fas fa-trash'></i></button> " +
-                        "</td>" +
-                    "</tr>";
+                    buttons = "<button class='btn btn-sm btn-success' title='Editar' onclick='editarAssunto(" + assunto.id + ");'><i class='fas fa-edit'></i></button> " +
+                            "<button class='btn btn-sm btn-danger' title='Excluir' onclick='excluirAssunto(" + assunto.id + ");'><i class='fas fa-trash'></i></button> ";
                 }
                 
                 if(tipo == 2){
-                    tr +=
-                        "<td class='text-center' width='5%'>" +
-                            "<button class='btn btn-sm btn-success' title='Adicionar' onclick='vincularAssuntoLivro(" + valor.id + ");'><i class='fas fa-plus'></i></button> " +
-                        "</td>" +
-                    "</tr>";
+                    buttons = "<button class='btn btn-sm btn-success' title='Adicionar' onclick='vincularAssuntoLivro(" + assunto.id + ");'><i class='fas fa-plus'></i></button>";
                 }
-            
-                $("#" + nomeTabela).append(tr);
+
+                dadosDataTable.push({
+                    id: assunto.id,
+                    descricao: assunto.descricao,
+                    acoes: buttons
+                });
             });
-            
-            dataTableOptions.columns = [{ type: "num" }, null, null];
+
+            dataTableOptions.data = dadosDataTable;
+            dataTableOptions.columns = [
+                {data: "id", type: "num"}, 
+                {data: "descricao"}, 
+                {data: "acoes"}
+            ];
+            dataTableOptions.columnDefs = [
+                {targets: 0, className: 'text-center'},
+                {targets: 2, className: 'text-center'}
+            ];
+
             $("#" + nomeTabela).dataTable(dataTableOptions);
         },
     });

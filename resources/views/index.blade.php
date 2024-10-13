@@ -218,6 +218,21 @@
         </div>
     </div>                   
 
+    
+@component('components/assunto/manutencao')          
+@endcomponent   
+
+@component('components/autor/manutencao')          
+@endcomponent  
+
+@component('components/livro/manutencao')          
+@endcomponent   
+
+@component('components/livro-assunto/vinculo')          
+@endcomponent   
+
+@component('components/livro-autor/vinculo')          
+@endcomponent   
 @component('components/rodape',
     array(
         'scripts' => array('index', 'assunto', 'autor', 'livro')

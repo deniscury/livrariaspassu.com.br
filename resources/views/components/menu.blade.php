@@ -48,7 +48,7 @@
     </div>
 
     <li class="nav-item">
-        <a class="nav-link" href="/relatorio/livros-autor">
+        <a class="nav-link" href="{{ route('livraria.livro-autor') }}">
             <i class="fas fa-fw fa-folder"></i>
             <span>Livros por autor</span>
         </a>
