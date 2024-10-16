@@ -114,14 +114,26 @@ function salvarAutor() {
         data: {
             nome: nome,
         },
+        beforeSend: function(){
+            $("#btnSalvarAutor").hide();
+        },
         success: function (retorno) {
+            $("#btnSalvarAutor").show();
             mensagem = retorno.mensagem;
 
             if (mensagem != undefined) {
                 alert(mensagem);
             }
+
+            zerarDataTable("tbAutores", 3);
+
+            quantidadeAutores();
+            getAutores(1);
+
+            $("#manutencaoAutor").modal("hide");
         },
         error: function (retorno) {
+            $("#btnSalvarAutor").show();
             retorno = JSON.parse(retorno.responseText);
 
             mensagem = retorno.mensagem;
@@ -132,14 +144,7 @@ function salvarAutor() {
             });
 
             alert(mensagem);
-        },
-        complete: function () {
-            zerarDataTable("tbAutores", 3);
-
-            quantidadeAutores();
-            getAutores(1);
-            $("#manutencaoAutor").modal("hide");
-        },
+        }
     });
 }
 

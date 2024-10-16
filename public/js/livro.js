@@ -303,14 +303,26 @@ function salvarLivro() {
             ano_publicacao: ano_publicacao,
             valor: valor,
         },
+        beforeSend: function(){
+            $("#btnSalvarLivro").hide();
+        },
         success: function (retorno) {
+            $("#btnSalvarLivro").show();
             mensagem = retorno.mensagem;
 
             if (mensagem != undefined) {
                 alert(mensagem);
             }
+
+            zerarDataTable("tbLivros", 7);
+
+            quantidadeLivros();
+            getLivros();
+            
+            $("#manutencaoLivro").modal("hide");
         },
         error: function (retorno) {
+            $("#btnSalvarLivro").show();
             retorno = JSON.parse(retorno.responseText);
 
             mensagem = retorno.mensagem;
@@ -321,14 +333,7 @@ function salvarLivro() {
             });
 
             alert(mensagem);
-        },
-        complete: function () {
-            zerarDataTable("tbLivros", 7);
-
-            quantidadeLivros();
-            getLivros();
-            $("#manutencaoLivro").modal("hide");
-        },
+        }
     });
 }
 

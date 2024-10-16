@@ -114,14 +114,26 @@ function salvarAssunto() {
         data: {
             descricao: descricao,
         },
+        beforeSend: function(){
+            $("#btnSalvarAssunto").hide();
+        },
         success: function (retorno) {
+            $("#btnSalvarAssunto").show();
             mensagem = retorno.mensagem;
 
             if (mensagem != undefined) {
                 alert(mensagem);
             }
+
+            zerarDataTable("tbAssuntos", 3);
+
+            quantidadeAssuntos();
+            getAssuntos(1);
+
+            $("#manutencaoAssunto").modal("hide");
         },
         error: function (retorno) {
+            $("#btnSalvarAssunto").show();
             retorno = JSON.parse(retorno.responseText);
 
             mensagem = retorno.mensagem;
@@ -130,16 +142,9 @@ function salvarAssunto() {
             $.each(erros, function (index, valor) {
                 mensagem += "\n" + valor;
             });
-
+                
             alert(mensagem);
-        },
-        complete: function () {
-            zerarDataTable("tbAssuntos", 3);
-
-            quantidadeAssuntos();
-            getAssuntos(1);
-            $("#manutencaoAssunto").modal("hide");
-        },
+        }
     });
 }
 

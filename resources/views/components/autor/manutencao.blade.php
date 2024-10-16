@@ -14,7 +14,7 @@
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-default" data-dismiss="modal">Cancelar</button>
-				<button class="btn btn-success" onclick=salvarAutor();>Salvar</button>
+				<button class="btn btn-success" id="btnSalvarAutor" onclick=salvarAutor();>Salvar</button>
 			</div>
 		</div>
 	</div>
