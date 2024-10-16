@@ -39,7 +39,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped dataTable" id="tbLivros" width="100%" cellspacing="0">
+                        <table class="table table-bordered table-striped dataTable" id="tbRelatorio" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>Código</th>
@@ -81,7 +81,7 @@
 
 @component('components/rodape',
     array(
-        'scripts' => array('index', 'livro-autor')
+        'scripts' => array('index', 'assunto', 'autor', 'livro', 'livro-autor')
     )
 )
 @endcomponent

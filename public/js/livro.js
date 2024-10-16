@@ -169,30 +169,33 @@ function getAssuntosVinculados(id) {
         async: true,
         success: function (retorno) {
             dados = retorno.dados[0];
+            dadosDataTable = [];
 
             $("#tbAssuntosVinculados tbody").empty();
             $.each(dados, function (chave, valor) {
-                tr =
-                    "<tr>" +
-                        "<td class='text-center' width='5%'>" +
-                            "<button class='btn btn-sm btn-danger' title='Remover' onclick='desvincularAssuntoLivro(" + valor.assunto.id + ");'><i class='fas fa-minus'></i></button> " +
-                        "</td>" +
-                        "<td class='text-center'>" +
-                            valor.assunto.id +
-                        "</td>" +
-                        "<td>" +
-                            valor.assunto.descricao +
-                        "</td>"+
-                    "</tr>";
+                button = "<button class='btn btn-sm btn-danger' title='Remover' onclick='desvincularAssuntoLivro(" + valor.assunto.id + ");'><i class='fas fa-minus'></i></button> ";
 
                 $("#tbAssuntosNaoVinculados").DataTable().row( function ( idx, data, node ) {
-                    return data[0] == valor.assunto.id;
+                    return data.id == valor.assunto.id;
                 }).remove().draw();
 
-                $("#tbAssuntosVinculados").append(tr);
+                dadosDataTable.push({
+                    acoes: button,
+                    id: valor.assunto.id,
+                    descricao: valor.assunto.descricao
+                });
             });
-            
-            dataTableOptions.columns = [{ type: "num" }, null, null];
+
+            dataTableOptions.data = dadosDataTable;
+            dataTableOptions.columns = [
+                {data: "acoes"}, 
+                {data: "id", type: "num"}, 
+                {data: "descricao"}
+            ];
+            dataTableOptions.columnDefs = [
+                {targets: 0, className: 'text-center'},
+                {targets: 1, className: 'text-center'}
+            ];
             $("#tbAssuntosVinculados").dataTable(dataTableOptions);
         },
     });
@@ -222,30 +225,33 @@ function getAutoresVinculados(id) {
         async: true,
         success: function (retorno) {
             dados = retorno.dados[0];
+            dadosDataTable = [];
 
             $("#tbAutoresVinculados tbody").empty();
             $.each(dados, function (chave, valor) {
-                tr =
-                    "<tr>" +
-                        "<td class='text-center' width='5%'>" +
-                            "<button class='btn btn-sm btn-danger' title='Remover' onclick='desvincularAutorLivro(" + valor.autor.id + ");'><i class='fas fa-minus'></i></button> " +
-                        "</td>" +
-                        "<td class='text-center'>" +
-                            valor.autor.id +
-                        "</td>" +
-                        "<td>" +
-                            valor.autor.nome +
-                        "</td>"+
-                    "</tr>";
+                button = "<button class='btn btn-sm btn-danger' title='Remover' onclick='desvincularAutorLivro(" + valor.autor.id + ");'><i class='fas fa-minus'></i></button> ";
 
                 $("#tbAutoresNaoVinculados").DataTable().row( function ( idx, data, node ) {
-                    return data[0] == valor.autor.id;
+                    return data.id == valor.autor.id;
                 }).remove().draw();
 
-                $("#tbAutoresVinculados").append(tr);
+                dadosDataTable.push({
+                    acoes: button,
+                    id: valor.autor.id,
+                    nome: valor.autor.nome
+                });
             });
             
-            dataTableOptions.columns = [{ type: "num" }, null, null];
+            dataTableOptions.data = dadosDataTable;
+            dataTableOptions.columns = [
+                {data: "acoes"}, 
+                {data: "id", type: "num"}, 
+                {data: "nome"}
+            ];
+            dataTableOptions.columnDefs = [
+                {targets: 0, className: 'text-center'},
+                {targets: 1, className: 'text-center'}
+            ];
             $("#tbAutoresVinculados").dataTable(dataTableOptions);
         },
     });

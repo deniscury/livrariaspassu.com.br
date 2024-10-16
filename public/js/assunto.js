@@ -30,7 +30,7 @@ function getAssuntos(tipo) {
         dataType: "json",
         type: "GET",
         crossDomain: true,
-        async: true,
+        async: (tipo==1),
         success: function (retorno) {
             assuntos = retorno.dados[0];
             nomeTabela = (tipo == 1 ? "tbAssuntos" : "tbAssuntosNaoVinculados");
@@ -66,7 +66,7 @@ function getAssuntos(tipo) {
             ];
 
             $("#" + nomeTabela).dataTable(dataTableOptions);
-        },
+        }
     });
 }
 

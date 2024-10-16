@@ -10,6 +10,14 @@
             </footer>
         </div>
     </div>
+    @component('components/assunto/manutencao')          
+    @endcomponent   
+
+    @component('components/autor/manutencao')          
+    @endcomponent  
+
+    @component('components/livro/manutencao')          
+    @endcomponent   
 
 
     <a class="scroll-to-top rounded" href="#page-top">

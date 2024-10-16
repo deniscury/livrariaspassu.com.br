@@ -15,7 +15,7 @@ $(document).ready(function () {
 });
 
 function atualizarRelatorio(){
-    zerarDataTable("tbLivros", 8);
+    zerarDataTable("tbRelatorio", 8);
     getRelatorio();
 }
 
@@ -51,7 +51,7 @@ function getRelatorio() {
             autores = retorno.dados[0];
             dadosDataTable = [];
             
-            $("#tbLivros tbody").empty();
+            $("#tbRelatorio tbody").empty();
             $.each(autores, function(index, autor){
                 livros = autor.livros[0];
                 $.each(livros, function(index, livro){
@@ -102,7 +102,7 @@ function getRelatorio() {
             ]
             dataTableOptions.bFilter = false;
 
-            $("#tbLivros").DataTable(dataTableOptions);
+            $("#tbRelatorio").DataTable(dataTableOptions);
         }
     });
 }
